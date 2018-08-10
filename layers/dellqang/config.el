@@ -73,24 +73,24 @@
 )
 
 
-(with-eval-after-load 'latex
-(add-hook 'doc-view-mode-hook 'auto-revert-mode)
-(setq-default TeX-engine 'xetex)
-(setq-default TeX-master nil)
-
-(setq TeX-view-program-list
+(defun my-LaTeX-mode()
+    (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+    (setq TeX-command-default "XeLaTeX") 
+    (setq TeX-save-query  nil )
+    (setq TeX-show-compilation t)
+    (setq TeX-view-program-list
         '(("Sumatra PDF" ("\"c:/Program Files/SumatraPDF/SumatraPDF.exe\" -reuse-instance"
                           (mode-io-correlate "-forward-search %b %n ") "%o"
                           )))
         )
-(eval-after-load 'tex
-    '(progn
-       (assq-delete-all 'output-pdf TeX-view-program-selection)
-       (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
-)
 
-
-
+     ;; (cdlatex-mode t) ;; 好像不用这一行即可启用cdlatex-mode
+    )
+  (add-hook 'LaTeX-mode-hook 'my-LaTeX-mode)
+  
+ (dolist (charset '(kana han cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font) charset
+                    (font-spec :family "汉仪瘦金书简" :size 22)))
 
 
 
