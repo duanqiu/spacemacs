@@ -73,6 +73,22 @@
 )
 
 
+(with-eval-after-load 'latex
+(add-hook 'doc-view-mode-hook 'auto-revert-mode)
+(setq-default TeX-engine 'xetex)
+(setq-default TeX-master nil)
+
+(setq TeX-view-program-list
+        '(("Sumatra PDF" ("\"c:/Program Files/SumatraPDF/SumatraPDF.exe\" -reuse-instance"
+                          (mode-io-correlate "-forward-search %b %n ") "%o"
+                          )))
+        )
+(eval-after-load 'tex
+    '(progn
+       (assq-delete-all 'output-pdf TeX-view-program-selection)
+       (add-to-list 'TeX-view-program-selection '(output-pdf "Sumatra PDF"))))
+)
+
 
 
 

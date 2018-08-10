@@ -31,43 +31,41 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     yaml
-     python
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     ivy
      ;;helm
      auto-completion
      better-defaults
      emacs-lisp
      git
+	 ivy 
      markdown
      org
+     dellqang
+     chinese
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
-     syntax-checking
-     ranger
+     ;; syntax-checking
      ;; version-control
-
-     dellqang
+	 (latex :variables
+       latex-enable-folding t
+       latex-build-command "XeLaTeX"
+       latex-enable-auto-fill t)
      )
-   ;; List ofotspacemacs-line-numbers nil additional pommand, to install Ranger. The package name is ranger.ackages that will be installed without being
-   ;; wrapped in a layer. If y ouloaded  need some configuration for these
+   ;; List of additional packages that will be installed without being
+   ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
-   ;; otspacemacs-line-numbers nilconfiguration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(helm
-                                     org-pomodoro  
-)
-
+   ;; configuration in `dotspacemacs/user-config'.
+   dotspacemacs-additional-packages '()
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(vi-tilde-fringe)
+   dotspacemacs-excluded-packages '()
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -136,18 +134,15 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-						 solarized-light
-                         solarized-dark
-                         leuven
-                         jazz
-                         spacemacs-dark
-                         spacemacs-light)
+							monokai
+							spacemacs-dark
+							spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 16
+                               :size 20 
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -234,7 +229,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -308,19 +303,12 @@ values."
    ))
 
 (defun dotspacemacs/user-init ()
-  "Initialization function for user code.
-It is called immediately after `dotspacemacs/init', before layer configuration
-executes.
- This function is mostly useful for variables that need to be set
-before packages are loaded. If you are unsure, you should try in setting them in
-`dotspacemacs/user-config' first."
-(setq configuration-layer--elpa-archives
+  (setq configuration-layer--elpa-archives
     '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
       ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
-      ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/"))
+      ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
+  )
 
-    )
-)
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -329,7 +317,26 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  (setq powerline-default-separator 'arrow)
+
+(defun my-LaTeX-mode()
+    (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+    (setq TeX-command-default "XeLaTeX") 
+    (setq TeX-save-query  nil )
+    (setq TeX-show-compilation t)
+    (setq TeX-view-program-list
+        '(("Sumatra PDF" ("\"c:/Program Files/SumatraPDF/SumatraPDF.exe\" -reuse-instance"
+                          (mode-io-correlate "-forward-search %b %n ") "%o"
+                          )))
+        )
+
+     ;; (cdlatex-mode t) ;; 好像不用这一行即可启用cdlatex-mode
+    )
+  (add-hook 'LaTeX-mode-hook 'my-LaTeX-mode)
+  
+ (dolist (charset '(kana han cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font) charset
+                    (font-spec :family "微软雅黑" :size 22)))
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -341,10 +348,10 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (doom-dark-theme ranger yaml-mode yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode dash-functional cython-mode company-anaconda anaconda-mode pythonic helm-themes helm-swoop helm-projectile helm-mode-manager helm-gitignore helm-flx helm-descbinds helm-company helm-c-yasnippet helm-ag ace-jump-helm-line youdao-dictionary names chinese-word-at-point ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package unfill toc-org spaceline powerline smex smeargle restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-plus-contrib org-mime org-download org-bullets open-junk-file neotree mwim move-text mmm-mode markdown-toc markdown-mode magit-gitflow macrostep lorem-ipsum linum-relative link-hint ivy-hydra indent-guide hydra hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-make helm helm-core google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flycheck-pos-tip pos-tip flycheck flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit magit magit-popup git-commit ghub let-alist with-editor evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy company-statistics company column-enforce-mode clean-aindent-mode bind-map bind-key auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed async aggressive-indent adaptive-wrap ace-window ace-link avy ac-ispell auto-complete popup solarized-theme dash))))
+    (pyim pyim-basedict pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib company-auctex cdlatex auctex wgrep unfill smex smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow ivy-hydra htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flyspell-correct-helm flyspell-correct evil-magit magit magit-popup git-commit ghub with-editor counsel-projectile counsel swiper ivy company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((((class color) (min-colors 257)) (:foreground "#F8F8F2" :background "#272822")) (((class color) (min-colors 89)) (:foreground "#F5F5F5" :background "#1B1E1C")))))
