@@ -10,6 +10,8 @@
    "** TODO %?\n  %a")
   ("b" "Blog" entry (file+headline ,"~/Emacs_files/Org/Blog.org" "感想")
    "**  %?\n  %a")
+  ("d" "daily program" entry (file+datetree ,"~/Emacs_files/Org/task.org" )
+   "**  %?\n  %a")
   ("c" "Copy" entry (file+headline ,"~/Emacs_files/Org/Blog.org" "摘抄")
    "**  %?\n  %a")
   ("s" "Study" entry (file+headline ,"~/Emacs_files/Org/Blog.org" "对某件事的理解")
