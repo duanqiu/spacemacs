@@ -6,22 +6,24 @@
 
 (setq org-capture-templates
 
-  `(("t" "Task" entry (file+headline ,"~/Emacs_files/Org/inbox.org" "任务记录")
-   "** TODO %?\n  %a")
-  ("b" "Blog" entry (file+headline ,"~/Emacs_files/Org/Blog.org" "感想")
-   "**  %?\n  %a")
+  `(("t" "Task" table-line (file ,"~/Emacs_files/Org/inbox.org")
+   "| %T |%^T| --- |%^{事件}|%^{描述}| *TODO* |")
+  ("p" "Apperception" entry (file+headline ,"~/Emacs_files/Org/Note.org" "Apperception")
+  "**  %^{heading} - %U \n  *%^{前言}* \n %?")
   ("d" "daily program" entry (file+datetree ,"~/Emacs_files/Org/task.org" )
-   "**  %?\n  %a")
-  ("c" "Copy" entry (file+headline ,"~/Emacs_files/Org/Blog.org" "摘抄")
-   "**  %?\n  %a")
-  ("s" "Study" entry (file+headline ,"~/Emacs_files/Org/Blog.org" "对某件事的理解")
-   "** TODO %?\n  %a")
-  ("n" "Note" entry (file+headline ,"~/Emacs_files/Org/inbox.org" "临时安排事项")
-   "** TODO %?\n  %a")))
+   "**  %?\n ") 
+  ("e" "Extract" entry (file+headline ,"~/Emacs_files/Org/Note.org" "extract")
+   "** %^{heading} - %U \n  %x\n")
+  ("u" "Understanding of events" entry (file+headline ,"~/Emacs_files/Org/Note.org" "Understanding of events")
+   "**  %U -  %^{heading}\n  *%^{前言}* \n %?")
+  ("a" "makeshift arrangement" entry (file+headline ,"~/Emacs_files/Org/inbox.org" "makeshift arrangement")
+   "** TODO %?\n") 
+  )
+)
 )
 
 (global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "<f12>") 'org-capture)
+(global-set-key (kbd "<f11>") 'org-capture)
 
 ;;orgmode 断行
 (defun my-org-mode ()
@@ -93,7 +95,3 @@
  (dolist (charset '(kana han cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font) charset
                     (font-spec :family "汉仪瘦金书简" :size 22)))
-
-
-
-
