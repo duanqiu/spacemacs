@@ -63,8 +63,8 @@ Each entry is either:
     :defer t
     :init
     (spacemacs/set-leader-keys "oy" 'youdao-dictionary-search-at-point+)
-    )
   )
+)
 
 
 

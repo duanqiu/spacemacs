@@ -24,7 +24,7 @@
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "<f11>") 'org-capture)
-
+(setq default-tab-width 4)
 ;;orgmode 断行
 (defun my-org-mode ()
   (setq truncate-lines nil)
@@ -94,4 +94,4 @@
   
  (dolist (charset '(kana han cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font) charset
-                    (font-spec :family "汉仪瘦金书简" :size 22)))
+                    (font-spec :family "Source Han Serif SC" :size 22)))
