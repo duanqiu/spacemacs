@@ -48,12 +48,12 @@ values."
      org
      dellqang
      ranger
-     chinese
+     ;; chinese
      (spacemacs-layouts :variables
                         layouts-enable-autosave t
                         layouts-autosave-delay 300
       )
-     ;; chinese 
+     chinese 
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -141,16 +141,22 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '( monokai
+   dotspacemacs-themes '( 
+							;;solarized-light
+							;;solarized-dark
+							;;leuven
+							;; monokai
+							 zenburn
 							spacemacs-light
 							spacemacs-dark
+                            monokai
 						)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 20 
+                               :size 46 
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -311,7 +317,7 @@ values."
    ))
 
 (defun dotspacemacs/user-init ()
-  (setq configuration-layer--elpa-archives
+  (setq configuration-layer-elpa-archives
     '(("melpa-cn" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
       ("org-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/org/")
       ("gnu-cn"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")))
@@ -325,7 +331,9 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-
+(dolist (charset '(kana han symbol cjk-misc bopomofo))
+  (set-fontset-font (frame-parameter nil 'font)
+                    charset (font-spec :family "NSimSun" :size 46)))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
